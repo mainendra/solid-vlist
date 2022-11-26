@@ -18,8 +18,8 @@ export default function Banner(params: BannerParams) {
         isNext: (event: KeyboardEvent) => params.focused && ["ArrowRight", "KEYCODE_DPAD_RIGHT"].includes(event.code),
         isPrevious: (event: KeyboardEvent) => params.focused && ["ArrowLeft", "KEYCODE_DPAD_LEFT"].includes(event.code),
         startIndex: 0,
-        circular: false,
-        fixedFocus: true,
+        circular: true,
+        fixedFocus: false,
         totalItems: 1000,
     });
 
