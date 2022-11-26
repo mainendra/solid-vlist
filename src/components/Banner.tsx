@@ -29,7 +29,7 @@ export default function Banner(params: BannerParams) {
 
     return (
         <div ref={parentRef} class="h-[150px] mx-20 overflow-hidden">
-            <div style={{ width: `${listSizePixel}px`, transform: `translateX(${-startPosition()}px)` }} class="relative flex transition-all">
+            <div style={{ width: `${listSizePixel}px`, transform: `translate3d(${-startPosition()}px, 0, 0)` }} class="relative flex transition-all">
                 <For each={list()}>
                     {
                         (item) =>
