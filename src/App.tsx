@@ -1,5 +1,5 @@
 import { Component, createSignal, For, onMount } from 'solid-js';
-import Banner from './components/Banner';
+import Swimlane from './components/Swimlane';
 import { createVirtualList } from './libs/virtualList';
 
 const App: Component = () => {
@@ -27,7 +27,7 @@ const App: Component = () => {
                 <div style={{ height: `${listSizePixel}px`, transform: `translate3d(0, ${-startPosition()}px, 0)` }} class="relative flex flex-col transition-all">
                     <For each={list()}>
                         {
-                            (item) => <div style={{ top: `${item.start}px` }} class="absolute w-screen"><Banner index={item.index} focused={focusedIndex() === item.index} /></div>
+                            (item) => <div style={{ top: `${item.start}px` }} class="absolute w-screen"><Swimlane index={item.index} focused={focusedIndex() === item.index} /></div>
                         }
                     </For>
                 </div>
