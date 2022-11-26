@@ -11,6 +11,7 @@ export default defineConfig(({ mode }) => {
     plugins: [solidPlugin()],
     server: {
         port: env.PORT || 3000,
+        host: true,
     },
     build: {
         target: 'es2015',
