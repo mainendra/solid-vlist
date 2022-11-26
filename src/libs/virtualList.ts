@@ -62,7 +62,6 @@ function getSlicedList({ overscan = 0, itemList, startPos, endPos }: GetSlicedLi
 
 // Use in component
 export function createVirtualList(params: VirtualListParams): returnType {
-    console.log('createVirtualList');
     const { isNext, isPrevious, isSelect, totalItems, startIndex = 0, circular = false, fixedFocus = false, paddingStart = 0, paddingEnd = 0, parentSize } = params;
     const { listSizePixel, itemList } = getItemList(params);
     const { position, next, previous } = createNav({ start: 0, end: totalItems - 1, current: startIndex, circular: circular });

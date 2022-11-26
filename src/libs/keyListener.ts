@@ -35,11 +35,8 @@ export function subscribeKeyDown(callback: (event: KeyboardEvent) => boolean|voi
     const handlerObject = { callback };
     handlers.push(handlerObject);
 
-    console.log(`total handlers (add) - ${handlers.length}`);
-
     return () => {
         handlers.splice(handlers.indexOf(handlerObject), 1);
-        console.log(`total handlers (remove) - ${handlers.length}`);
     };
 }
 
