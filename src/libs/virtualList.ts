@@ -1,4 +1,4 @@
-import { Accessor, batch, createEffect, createSignal, onCleanup } from "solid-js";
+import { Accessor, batch, createEffect, createMemo, createSignal, onCleanup } from "solid-js";
 import { subscribeKeyDown } from "./keyListener";
 import { createNav } from "./navigation";
 
@@ -17,21 +17,33 @@ interface VirtualListParams {
     isSelect?: (event: KeyboardEvent) => boolean;
 }
 
-export interface ListItem {
+interface ListItem {
     index: number;
     start: number;
     size: number;
     end: number;
 }
 
-interface returnType {
+interface VirtualList {
     list: Accessor<ListItem[]>,
     listSizePixel: number,
     startPosition: Accessor<number>,
     focusedIndex: Accessor<number>,
 }
 
-function getItemList({totalItems, sizeOfItem}: VirtualListParams) {
+interface GetSlicedListParam {
+    overscan?: number,
+    itemList: ListItem[],
+    startPos: number,
+    endPos: number,
+}
+
+interface GetListParam {
+    totalItems: number,
+    sizeOfItem: (index: number) => number,
+}
+
+function getItemList({totalItems, sizeOfItem}: GetListParam) {
     const list = [];
     let totalSize = 0;
     for (let i = 0; i < totalItems; i++) {
@@ -48,12 +60,6 @@ function getItemList({totalItems, sizeOfItem}: VirtualListParams) {
     return { listSizePixel: totalSize, itemList: list };
 }
 
-interface GetSlicedListParam extends VirtualListParams {
-    itemList: ListItem[],
-    startPos: number,
-    endPos: number,
-}
-
 function getSlicedList({ overscan = 0, itemList, startPos, endPos }: GetSlicedListParam): ListItem[] {
     const startIndex = itemList.find(item => item.start > startPos)?.index ?? 0;
     const endIndex = itemList.find(item => item.end >= endPos)?.index ?? itemList.length - 1;
@@ -61,14 +67,12 @@ function getSlicedList({ overscan = 0, itemList, startPos, endPos }: GetSlicedLi
 }
 
 // Use in component
-export function createVirtualList(params: VirtualListParams): returnType {
+export function createVirtualList(params: VirtualListParams): VirtualList {
     const { isNext, isPrevious, isSelect, totalItems, startIndex = 0, circular = false, fixedFocus = false, paddingStart = 0, paddingEnd = 0, parentSize } = params;
     const { listSizePixel, itemList } = getItemList(params);
     const { position, next, previous } = createNav({ start: 0, end: totalItems - 1, current: startIndex, circular: circular });
 
-    const [list, setList] = createSignal<ListItem[]>([]);
-    const [startPosition, setStartPosition] = createSignal(paddingStart);
-    createEffect<number>((prevStart) => {
+    const startPosition = createMemo((prevStart: number) => {
         const item = itemList[position()];
 
         const itemStart = item.start - paddingStart;
@@ -84,13 +88,9 @@ export function createVirtualList(params: VirtualListParams): returnType {
             result = Math.max(0, itemEnd - parentSize())
         }
 
-        batch(() => {
-            setStartPosition(result);
-            setList(getSlicedList({ ...params, startPos: result, endPos: (result + parentSize()), itemList }));
-        });
-
         return result;
     }, -paddingStart);
+    const list = () => getSlicedList({ ...params, startPos: startPosition(), endPos: (startPosition() + parentSize()), itemList });
 
     const onKeyDown = (event: KeyboardEvent) => {
         if (isNext?.(event)) {
