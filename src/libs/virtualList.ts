@@ -1,4 +1,4 @@
-import { Accessor, batch, createEffect, createMemo, createSignal, onCleanup } from "solid-js";
+import { Accessor, createMemo, onCleanup } from "solid-js";
 import { subscribeKeyDown } from "./keyListener";
 import { createNav } from "./navigation";
 
@@ -74,10 +74,15 @@ export function createVirtualList(params: VirtualListParams): VirtualList {
 
     const startPosition = createMemo((prevStart: number) => {
         const item = itemList[position()];
+        const parentSizeValue = parentSize();
+
+        if (parentSizeValue <= 0) { // wait for parent to render
+            return prevStart;
+        }
 
         const itemStart = item.start - paddingStart;
         const itemEnd = item.start + item.size + paddingEnd;
-        const prevEnd = prevStart + parentSize();
+        const prevEnd = prevStart + parentSizeValue;
 
         let result = prevStart;
         if (fixedFocus) {
@@ -85,7 +90,7 @@ export function createVirtualList(params: VirtualListParams): VirtualList {
         } else if (itemStart < prevStart) { // before
             result = itemStart;
         } else if (itemEnd >= prevEnd) { // after
-            result = Math.max(0, itemEnd - parentSize())
+            result = Math.max(0, itemEnd - parentSizeValue)
         }
 
         return result;
