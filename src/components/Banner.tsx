@@ -34,7 +34,7 @@ export default function Banner(params: BannerParams) {
                     {
                         (item) =>
                         <div class="w-[150px] h-[150px] flex justify-center items-center transition-all absolute" classList={{'scale-125': item.index === getFocusedIndex()}} style={{ left: `${item.start}px` }}>
-                            <img src={`https://picsum.photos/seed/${params.index}${item.index}/100`} alt={`r${item.start}c${item.index}`}  classList={{'border-solid border-2 border-red-500': item.index === getFocusedIndex()}} />
+                            <img src={`https://picsum.photos/seed/${params.index}${item.index}/100`} alt={`r${item.start}c${item.index}`} class="w-[100px] h-[100px]"  classList={{'border-solid border-2 border-red-500': item.index === getFocusedIndex()}} />
                         </div>
                     }
                 </For>
