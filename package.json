@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "",
   "scripts": {
-    "start": "vite --port $PORT",
+    "start": "vite --port process.env.PORT",
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview"
