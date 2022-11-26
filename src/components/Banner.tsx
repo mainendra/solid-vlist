@@ -11,7 +11,7 @@ export default function Banner(params: BannerParams) {
     const [parentSize, setParentSize] = createSignal(0);
     const { list, listSizePixel, startPosition, focusedIndex } = createVirtualList({
         parentSize,
-        sizeOfItem: () => 200,
+        sizeOfItem: () => 150,
         overscan: 5,
         paddingStart: 50,
         paddingEnd: 50,
@@ -28,13 +28,13 @@ export default function Banner(params: BannerParams) {
     onMount(() => setParentSize(parentRef?.offsetWidth ?? 0));
 
     return (
-        <div ref={parentRef} class="h-[200px] border-solid border-2 mx-20 overflow-hidden">
+        <div ref={parentRef} class="h-[150px] mx-20 overflow-hidden">
             <div style={{ width: `${listSizePixel}px`, transform: `translateX(${-startPosition()}px)` }} class="relative flex transition-all">
                 <For each={list()}>
                     {
                         (item) =>
-                        <div class="w-[200px] h-[200px] flex justify-center items-center transition-all absolute" classList={{'scale-125': item.index === getFocusedIndex()}} style={{ left: `${item.start}px` }}>
-                            <img src={`https://picsum.photos/seed/${params.index}${item.index}/150`} alt={`r${item.start}c${item.index}`}  classList={{'border-solid border-2 border-red-500': item.index === getFocusedIndex()}} />
+                        <div class="w-[150px] h-[150px] flex justify-center items-center transition-all absolute" classList={{'scale-125': item.index === getFocusedIndex()}} style={{ left: `${item.start}px` }}>
+                            <img src={`https://picsum.photos/seed/${params.index}${item.index}/100`} alt={`r${item.start}c${item.index}`}  classList={{'border-solid border-2 border-red-500': item.index === getFocusedIndex()}} />
                         </div>
                     }
                 </For>

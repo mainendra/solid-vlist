@@ -7,7 +7,7 @@ const App: Component = () => {
     const [parentSize, setParentSize] = createSignal(0);
     const { list, listSizePixel, startPosition, focusedIndex } = createVirtualList({
         parentSize,
-        sizeOfItem: () => 200,
+        sizeOfItem: () => 150,
         overscan: 5,
         paddingStart: 50,
         paddingEnd: 50,
@@ -22,7 +22,7 @@ const App: Component = () => {
     onMount(() => setParentSize(parentRef?.offsetHeight ?? 0));
 
     return (
-        <div class="relative h-screen w-screen py-20">
+        <div class="relative h-screen w-screen py-20 bg-white">
             <div ref={parentRef} class="h-full w-full overflow-hidden">
                 <div style={{ height: `${listSizePixel}px`, transform: `translateY(${-startPosition()}px)` }} class="relative flex flex-col transition-all">
                     <For each={list()}>
