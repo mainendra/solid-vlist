@@ -14,7 +14,7 @@ interface VirtualListParams {
     fixedFocus?: boolean,
     isNext?: (event: KeyboardEvent) => boolean;
     isPrevious?: (event: KeyboardEvent) => boolean;
-    isSelect?: (event: KeyboardEvent) => boolean;
+    handleKeyDown?: (event: KeyboardEvent) => boolean;
 }
 
 interface ListItem {
@@ -68,7 +68,7 @@ function getSlicedList({ overscan = 0, itemList, startPos, endPos }: GetSlicedLi
 
 // Use in component
 export function createVirtualList(params: VirtualListParams): VirtualList {
-    const { isNext, isPrevious, isSelect, totalItems, startIndex = 0, circular = false, fixedFocus = false, paddingStart = 0, paddingEnd = 0, parentSize } = params;
+    const { isNext, isPrevious, handleKeyDown, totalItems, startIndex = 0, circular = false, fixedFocus = false, paddingStart = 0, paddingEnd = 0, parentSize } = params;
     const { listSizePixel, itemList } = getItemList(params);
     const { position, next, previous } = createNav({ start: 0, end: totalItems - 1, current: startIndex, circular: circular });
 
@@ -108,12 +108,8 @@ export function createVirtualList(params: VirtualListParams): VirtualList {
             return previous();
         }
 
-        if (isSelect?.(event)) {
-            event.preventDefault();
-            return true;
-        }
 
-        return false;
+        return handleKeyDown?.(event) ?? false;
     };
 
     const cleanup = subscribeKeyDown(onKeyDown);
