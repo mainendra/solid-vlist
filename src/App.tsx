@@ -1,4 +1,5 @@
 import { Component, createSignal, For, onMount } from 'solid-js';
+import Banner from './components/Banner';
 import Swimlane from './components/Swimlane';
 import { createVirtualList } from './libs/virtualList';
 
@@ -7,7 +8,7 @@ const App: Component = () => {
     const [parentSize, setParentSize] = createSignal(0);
     const { list, listSizePixel, startPosition, focusedIndex } = createVirtualList({
         parentSize,
-        sizeOfItem: () => 150,
+        sizeOfItem: (index) => index % 5 === 0 ? 300 : 150,
         overscan: 5,
         paddingStart: 50,
         paddingEnd: 50,
@@ -27,7 +28,9 @@ const App: Component = () => {
                 <div style={{ height: `${listSizePixel}px`, transform: `translate3d(0, ${-startPosition()}px, 0)` }} class="relative flex flex-col transition-all">
                     <For each={list()}>
                         {
-                            (item) => <div style={{ top: `${item.start}px` }} class="absolute w-screen"><Swimlane index={item.index} focused={focusedIndex() === item.index} /></div>
+                            (item) => (item.index % 5 === 0) ?
+                                <div style={{ top: `${item.start}px` }} class="absolute w-screen"><Banner index={item.index} focused={item.index === focusedIndex()} /></div> :
+                                <div style={{ top: `${item.start}px` }} class="absolute w-screen"><Swimlane index={item.index} focused={focusedIndex() === item.index} /></div>
                         }
                     </For>
                 </div>

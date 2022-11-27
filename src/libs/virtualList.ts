@@ -100,14 +100,12 @@ export function createVirtualList(params: VirtualListParams): VirtualList {
     const onKeyDown = (event: KeyboardEvent) => {
         if (isNext?.(event)) {
             event.preventDefault();
-            next();
-            return true;
+            return next();
         }
 
         if (isPrevious?.(event)) {
             event.preventDefault();
-            previous();
-            return true;
+            return previous();
         }
 
         if (isSelect?.(event)) {
