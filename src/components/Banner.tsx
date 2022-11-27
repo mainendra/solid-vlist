@@ -43,7 +43,7 @@ function MiniChildBanner(params: MiniChildBannerParams) {
                     {
                         (item) =>
                         <div class="flex justify-center items-center" style={{width: `${params.height}px`, height: `${params.height}px`}}>
-                            <span classList={{'text-red-500 text-2xl font-bold scale-125': item.index === getFocusedIndex()}}>{item.index}</span>
+                            <span class="text-2xl transition-all" classList={{'text-red-500 font-bold scale-125': item.index === getFocusedIndex()}}>{item.index}</span>
                         </div>
                     }
                 </For>
@@ -84,7 +84,7 @@ function ChildBanner(params: ChildBannerParams) {
                             <MiniChildBanner index={item.index} focused={params.focused && item.index === focusedIndex()} height={itemSize()} />
                         </div> :
                         <div class="flex justify-center items-center" style={{height: `${itemSize()}px`, width: `${params.width}px`}}>
-                            <span classList={{'text-red-500 text-2xl font-bold scale-125': item.index === getFocusedIndex()}}>{item.index}</span>
+                            <span class="text-4xl transition-all" classList={{'text-red-500 font-bold scale-125': item.index === getFocusedIndex()}}>{item.index}</span>
                         </div>
                     }
                 </For>
@@ -126,7 +126,7 @@ export default function Banner(params: BannerParams) {
                                 <ChildBanner index={item.index} focused={params.focused && item.index === focusedIndex()} width={itemSize()} />
                             </div> :
                             <div class="h-[300px] flex justify-center items-center" style={{width: `${itemSize()}px`}}>
-                                <span classList={{'text-red-500 text-2xl font-bold scale-125': item.index === getFocusedIndex()}}>{item.index}</span>
+                                <span class="text-4xl transition-all" classList={{'text-red-500 font-bold scale-125': item.index === getFocusedIndex()}}>{item.index}</span>
                             </div>
                     }
                 </For>
