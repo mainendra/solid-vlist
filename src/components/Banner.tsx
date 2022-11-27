@@ -117,15 +117,15 @@ export default function Banner(params: BannerParams) {
 
     return (
         <div ref={parentRef} class="h-[300px] mx-20 overflow-hidden">
-            <div class="relative flex transition-all h-full w-full border-2 border-solid border-blue-500">
+            <div class="relative flex h-full w-full border-2 border-solid border-blue-500">
                 <For each={list()}>
                     {
                         (item) =>
                             item.index === 3 ?
-                            <div class="h-[300px] flex justify-center items-center transition-all" style={{width: `${itemSize()}px`}}>
+                            <div class="h-[300px] flex justify-center items-center" style={{width: `${itemSize()}px`}}>
                                 <ChildBanner index={item.index} focused={params.focused && item.index === focusedIndex()} width={itemSize()} />
                             </div> :
-                            <div class="h-[300px] flex justify-center items-center transition-all" style={{width: `${itemSize()}px`}}>
+                            <div class="h-[300px] flex justify-center items-center" style={{width: `${itemSize()}px`}}>
                                 <span classList={{'text-red-500 text-2xl font-bold scale-125': item.index === getFocusedIndex()}}>{item.index}</span>
                             </div>
                     }
