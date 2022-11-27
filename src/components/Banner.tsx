@@ -42,7 +42,7 @@ function MiniChildBanner(params: MiniChildBannerParams) {
                 <For each={list()}>
                     {
                         (item) =>
-                        <div class="flex justify-center items-center transition-all" style={{width: `${params.height}px`, height: `${params.height}px`}}>
+                        <div class="flex justify-center items-center" style={{width: `${params.height}px`, height: `${params.height}px`}}>
                             <span classList={{'text-red-500 text-2xl font-bold scale-125': item.index === getFocusedIndex()}}>{item.index}</span>
                         </div>
                     }
@@ -83,7 +83,7 @@ function ChildBanner(params: ChildBannerParams) {
                         <div class="flex justify-center items-center transition-all" style={{height: `${itemSize()}px`, width: `${params.width}px`}}>
                             <MiniChildBanner index={item.index} focused={params.focused && item.index === focusedIndex()} height={itemSize()} />
                         </div> :
-                        <div class="flex justify-center items-center transition-all" style={{height: `${itemSize()}px`, width: `${params.width}px`}}>
+                        <div class="flex justify-center items-center" style={{height: `${itemSize()}px`, width: `${params.width}px`}}>
                             <span classList={{'text-red-500 text-2xl font-bold scale-125': item.index === getFocusedIndex()}}>{item.index}</span>
                         </div>
                     }
