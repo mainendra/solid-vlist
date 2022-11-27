@@ -1,4 +1,5 @@
 import { createSignal, For, onMount } from "solid-js";
+import { getKey, KEYS } from "../libs/keyCodes";
 import { createKeyNav } from "../libs/navigation";
 import { createVirtualList } from "../libs/virtualList";
 
@@ -48,19 +49,19 @@ function SquareBanner(params: ChildBannerParams) {
                 return false;
             }
 
-            if (["ArrowRight", "KEYCODE_DPAD_RIGHT"].includes(event.code) && stateMachine[focusedIndex()]['right']) {
+            if (getKey(event) === KEYS.RIGHT && stateMachine[focusedIndex()]['right']) {
                 setFocusedIndex(stateMachine[focusedIndex()]['right']);
                 return true;
             }
-            if (["ArrowLeft", "KEYCODE_DPAD_LEFT"].includes(event.code) && stateMachine[focusedIndex()]['left']) {
+            if (getKey(event) === KEYS.LEFT && stateMachine[focusedIndex()]['left']) {
                 setFocusedIndex(stateMachine[focusedIndex()]['left']);
                 return true;
             }
-            if (["ArrowDown", "KEYCODE_DPAD_DOWN"].includes(event.code) && stateMachine[focusedIndex()]['down']) {
+            if (getKey(event) === KEYS.DOWN && stateMachine[focusedIndex()]['down']) {
                 setFocusedIndex(stateMachine[focusedIndex()]['down']);
                 return true;
             }
-            if (["ArrowUp", "KEYCODE_DPAD_UP"].includes(event.code) && stateMachine[focusedIndex()]['up']) {
+            if (getKey(event) === KEYS.UP && stateMachine[focusedIndex()]['up']) {
                 setFocusedIndex(stateMachine[focusedIndex()]['up']);
                 return true;
             }
@@ -91,8 +92,8 @@ function MiniChildBanner(params: MiniChildBannerParams) {
         overscan: 5,
         paddingStart: 50,
         paddingEnd: 50,
-        isNext: (event: KeyboardEvent) => params.focused && ["ArrowRight", "KEYCODE_DPAD_RIGHT"].includes(event.code),
-        isPrevious: (event: KeyboardEvent) => params.focused && ["ArrowLeft", "KEYCODE_DPAD_LEFT"].includes(event.code),
+        isNext: (event: KeyboardEvent) => params.focused && getKey(event) === KEYS.RIGHT,
+        isPrevious: (event: KeyboardEvent) => params.focused && getKey(event) === KEYS.LEFT,
         startIndex: 2,
         circular: false,
         fixedFocus: false,
@@ -129,8 +130,8 @@ function ChildBanner(params: ChildBannerParams) {
         overscan: 5,
         paddingStart: 50,
         paddingEnd: 50,
-        isNext: (event: KeyboardEvent) => params.focused && ["ArrowDown", "KEYCODE_DPAD_DOWN"].includes(event.code),
-        isPrevious: (event: KeyboardEvent) => params.focused && ["ArrowUp", "KEYCODE_DPAD_UP"].includes(event.code),
+        isNext: (event: KeyboardEvent) => params.focused && getKey(event) === KEYS.DOWN,
+        isPrevious: (event: KeyboardEvent) => params.focused && getKey(event) === KEYS.UP,
         startIndex: 2,
         circular: false,
         fixedFocus: false,
@@ -170,8 +171,8 @@ export default function Banner(params: BannerParams) {
         overscan: 5,
         paddingStart: 50,
         paddingEnd: 50,
-        isNext: (event: KeyboardEvent) => params.focused && ["ArrowRight", "KEYCODE_DPAD_RIGHT"].includes(event.code),
-        isPrevious: (event: KeyboardEvent) => params.focused && ["ArrowLeft", "KEYCODE_DPAD_LEFT"].includes(event.code),
+        isNext: (event: KeyboardEvent) => params.focused && getKey(event) === KEYS.RIGHT,
+        isPrevious: (event: KeyboardEvent) => params.focused && getKey(event) === KEYS.LEFT,
         startIndex: 0,
         circular: true,
         fixedFocus: false,

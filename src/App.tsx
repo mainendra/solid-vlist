@@ -1,5 +1,6 @@
 import { Component, createSignal, For, onMount } from 'solid-js';
 import { lazy } from "solid-js";
+import { getKey, KEYS } from './libs/keyCodes';
 import { createVirtualList } from './libs/virtualList';
 
 const Banner = lazy(() => import('./components/Banner'));
@@ -14,8 +15,8 @@ const App: Component = () => {
         overscan: 5,
         paddingStart: 50,
         paddingEnd: 50,
-        isNext: (event: KeyboardEvent) => ["ArrowDown", "KEYCODE_DPAD_DOWN"].includes(event.code),
-        isPrevious: (event: KeyboardEvent) => ["ArrowUp", "KEYCODE_DPAD_UP"].includes(event.code),
+        isNext: (event: KeyboardEvent) => getKey(event) === KEYS.DOWN,
+        isPrevious: (event: KeyboardEvent) => getKey(event) === KEYS.UP,
         startIndex: 0,
         circular: false,
         fixedFocus: true,
