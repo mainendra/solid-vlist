@@ -1,4 +1,5 @@
 import { createSignal, For, onMount } from "solid-js";
+import { createKeyNav } from "../libs/navigation";
 import { createVirtualList } from "../libs/virtualList";
 
 interface BannerParams {
@@ -12,6 +13,70 @@ interface ChildBannerParams extends BannerParams {
 
 interface MiniChildBannerParams extends BannerParams {
     height: number;
+}
+
+interface StateType {
+    [key: string]: {
+        [key: string]: number;
+    };
+};
+
+const stateMachine: StateType = {
+    1 : {
+        'right': 2,
+        'down': 3,
+    },
+    2: {
+        'left': 1,
+        'down': 4,
+    },
+    3: {
+        'right': 4,
+        'up': 1,
+    },
+    4: {
+        'left': 3,
+        'up': 2,
+    },
+};
+
+function SquareBanner(params: ChildBannerParams) {
+    const [focusedIndex, setFocusedIndex] = createSignal<number>(1);
+    createKeyNav({
+        onKeyDown: (event) => {
+            if (!params.focused) {
+                return false;
+            }
+
+            if (["ArrowRight", "KEYCODE_DPAD_RIGHT"].includes(event.code) && stateMachine[focusedIndex()]['right']) {
+                setFocusedIndex(stateMachine[focusedIndex()]['right']);
+                return true;
+            }
+            if (["ArrowLeft", "KEYCODE_DPAD_LEFT"].includes(event.code) && stateMachine[focusedIndex()]['left']) {
+                setFocusedIndex(stateMachine[focusedIndex()]['left']);
+                return true;
+            }
+            if (["ArrowDown", "KEYCODE_DPAD_DOWN"].includes(event.code) && stateMachine[focusedIndex()]['down']) {
+                setFocusedIndex(stateMachine[focusedIndex()]['down']);
+                return true;
+            }
+            if (["ArrowUp", "KEYCODE_DPAD_UP"].includes(event.code) && stateMachine[focusedIndex()]['up']) {
+                setFocusedIndex(stateMachine[focusedIndex()]['up']);
+                return true;
+            }
+
+            return false;
+        }
+    });
+
+    return (
+        <div style={{height: `${params.width}px`, width: `${params.width}px`}} class="flex flex-wrap">
+            <span style={{height: `${params.width / 2}px`, width: `${params.width / 2}px`}} class="flex justify-center items-center" classList={{'text-red-500 text-2xl font-bold': params.focused && focusedIndex() === 1}}>1</span>
+            <span style={{height: `${params.width / 2}px`, width: `${params.width / 2}px`}} class="flex justify-center items-center" classList={{'text-red-500 text-2xl font-bold': params.focused && focusedIndex() === 2}}>2</span>
+            <span style={{height: `${params.width / 2}px`, width: `${params.width / 2}px`}} class="flex justify-center items-center" classList={{'text-red-500 text-2xl font-bold': params.focused && focusedIndex() === 3}}>3</span>
+            <span style={{height: `${params.width / 2}px`, width: `${params.width / 2}px`}} class="flex justify-center items-center" classList={{'text-red-500 text-2xl font-bold': params.focused && focusedIndex() === 4}}>4</span>
+        </div>
+    );
 }
 
 function MiniChildBanner(params: MiniChildBannerParams) {
@@ -124,6 +189,10 @@ export default function Banner(params: BannerParams) {
                             item.index === 3 ?
                             <div class="h-[300px] flex justify-center items-center" style={{width: `${itemSize()}px`}}>
                                 <ChildBanner index={item.index} focused={params.focused && item.index === focusedIndex()} width={itemSize()} />
+                            </div> :
+                            item.index === 1 ?
+                            <div class="h-[300px] flex justify-center items-center" style={{width: `${itemSize()}px`}}>
+                                <SquareBanner index={item.index} focused={params.focused && item.index === focusedIndex()} width={itemSize()} />
                             </div> :
                             <div class="h-[300px] flex justify-center items-center" style={{width: `${itemSize()}px`}}>
                                 <span class="text-4xl transition-all" classList={{'text-red-500 font-bold scale-125': item.index === getFocusedIndex()}}>{item.index}</span>

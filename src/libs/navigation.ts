@@ -1,4 +1,5 @@
-import { Accessor, createSignal } from "solid-js";
+import { Accessor, createSignal, onCleanup } from "solid-js";
+import { subscribeKeyDown } from "./keyListener";
 
 export interface navProps {
     start: number,
@@ -52,4 +53,12 @@ export function createNav({ start, end, current, circular }: navProps): returnTy
     };
 
     return { position, next, previous, goTo };
+}
+
+interface KeyNavParams {
+    onKeyDown: (event: KeyboardEvent) => boolean;
+}
+export function createKeyNav(params: KeyNavParams) {
+    const cleanup = subscribeKeyDown(params.onKeyDown);
+    onCleanup(cleanup);
 }
