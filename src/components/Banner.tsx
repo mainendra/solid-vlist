@@ -69,12 +69,14 @@ function SquareBanner(params: ChildBannerParams) {
         }
     });
 
+    const itemSize = () => (params.width / 2) - 4; // 2px border
+
     return (
         <div style={{height: `${params.width}px`, width: `${params.width}px`}} class="flex flex-wrap">
-            <span style={{height: `${params.width / 2}px`, width: `${params.width / 2}px`}} class="flex justify-center items-center" classList={{'text-red-500 text-2xl font-bold': params.focused && focusedIndex() === 1}}>1</span>
-            <span style={{height: `${params.width / 2}px`, width: `${params.width / 2}px`}} class="flex justify-center items-center" classList={{'text-red-500 text-2xl font-bold': params.focused && focusedIndex() === 2}}>2</span>
-            <span style={{height: `${params.width / 2}px`, width: `${params.width / 2}px`}} class="flex justify-center items-center" classList={{'text-red-500 text-2xl font-bold': params.focused && focusedIndex() === 3}}>3</span>
-            <span style={{height: `${params.width / 2}px`, width: `${params.width / 2}px`}} class="flex justify-center items-center" classList={{'text-red-500 text-2xl font-bold': params.focused && focusedIndex() === 4}}>4</span>
+            <span style={{height: `${itemSize()}px`, width: `${itemSize()}px`}} class="flex justify-center items-center border-2 border-purple-600" classList={{'text-red-500 text-2xl font-bold': params.focused && focusedIndex() === 1}}>1</span>
+            <span style={{height: `${itemSize()}px`, width: `${itemSize()}px`}} class="flex justify-center items-center border-2 border-purple-600" classList={{'text-red-500 text-2xl font-bold': params.focused && focusedIndex() === 2}}>2</span>
+            <span style={{height: `${itemSize()}px`, width: `${itemSize()}px`}} class="flex justify-center items-center border-2 border-purple-600" classList={{'text-red-500 text-2xl font-bold': params.focused && focusedIndex() === 3}}>3</span>
+            <span style={{height: `${itemSize()}px`, width: `${itemSize()}px`}} class="flex justify-center items-center border-2 border-purple-600" classList={{'text-red-500 text-2xl font-bold': params.focused && focusedIndex() === 4}}>4</span>
         </div>
     );
 }
