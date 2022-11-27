@@ -38,7 +38,7 @@ function MiniChildBanner(params: MiniChildBannerParams) {
 
     return (
         <div ref={parentRef} class="overflow-hidden w-full" style={{height: `${params.height}px`}}>
-            <div class="relative flex transition-all h-full w-full border-2 border-solid border-green-500">
+            <div class="relative flex h-full w-full border-2 border-solid border-green-500">
                 <For each={list()}>
                     {
                         (item) =>
@@ -76,11 +76,11 @@ function ChildBanner(params: ChildBannerParams) {
 
     return (
         <div ref={parentRef} class="overflow-hidden h-full" style={{width: `${params.width}px`}}>
-            <div class="relative flex flex-col transition-all h-full w-full border-2 border-solid border-red-500">
+            <div class="relative flex flex-col h-full w-full border-2 border-solid border-red-500">
                 <For each={list()}>
                     {
                         (item) => item.index === 2 ?
-                        <div class="flex justify-center items-center transition-all" style={{height: `${itemSize()}px`, width: `${params.width}px`}}>
+                        <div class="flex justify-center items-center" style={{height: `${itemSize()}px`, width: `${params.width}px`}}>
                             <MiniChildBanner index={item.index} focused={params.focused && item.index === focusedIndex()} height={itemSize()} />
                         </div> :
                         <div class="flex justify-center items-center" style={{height: `${itemSize()}px`, width: `${params.width}px`}}>
