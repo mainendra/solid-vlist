@@ -76,10 +76,6 @@ export function createVirtualList(params: VirtualListParams): VirtualList {
         const item = itemList[position()];
         const parentSizeValue = parentSize();
 
-        if (parentSizeValue <= 0) { // wait for parent to render
-            return prevStart;
-        }
-
         if (item.index === 0) { // no padding for first item
             return item.start;
         }
