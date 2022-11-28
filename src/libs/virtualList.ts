@@ -80,6 +80,10 @@ export function createVirtualList(params: VirtualListParams): VirtualList {
             return prevStart;
         }
 
+        if (item.index === 0) { // no padding for first item
+            return item.start;
+        }
+
         const itemStart = item.start - paddingStart;
         const itemEnd = item.start + item.size + paddingEnd;
         const prevEnd = prevStart + parentSizeValue;
