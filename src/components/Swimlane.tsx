@@ -1,4 +1,5 @@
 import { createSignal, For, onMount } from "solid-js";
+import { getKey, KEYS } from "../libs/keyCodes";
 import { createVirtualList } from "../libs/virtualList";
 
 interface SwimlaneParams {
@@ -10,13 +11,14 @@ export default function Swimlane(params: SwimlaneParams) {
     let parentRef: HTMLDivElement | undefined;
     const [parentSize, setParentSize] = createSignal(0);
     const { list, listSizePixel, startPosition, focusedIndex } = createVirtualList({
+        focused: () => params.focused,
         parentSize,
         sizeOfItem: () => 150,
         overscan: 5,
         paddingStart: 50,
         paddingEnd: 50,
-        isNext: (event: KeyboardEvent) => params.focused && ["ArrowRight", "KEYCODE_DPAD_RIGHT"].includes(event.code),
-        isPrevious: (event: KeyboardEvent) => params.focused && ["ArrowLeft", "KEYCODE_DPAD_LEFT"].includes(event.code),
+        isNext: (event: KeyboardEvent) => getKey(event) === KEYS.RIGHT,
+        isPrevious: (event: KeyboardEvent) => getKey(event) === KEYS.LEFT,
         startIndex: 0,
         circular: true,
         fixedFocus: false,

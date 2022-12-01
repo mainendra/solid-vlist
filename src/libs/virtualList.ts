@@ -1,4 +1,4 @@
-import { Accessor, createMemo, onCleanup } from "solid-js";
+import { Accessor, createEffect, createMemo, onCleanup } from "solid-js";
 import { subscribeKeyDown } from "./keyListener";
 import { createNav } from "./navigation";
 
@@ -15,6 +15,7 @@ interface VirtualListParams {
     isNext?: (event: KeyboardEvent) => boolean;
     isPrevious?: (event: KeyboardEvent) => boolean;
     onKeyDown?: (event: KeyboardEvent) => boolean;
+    focused?: Accessor<boolean>;
 }
 
 interface ListItem {
@@ -116,8 +117,13 @@ export function createVirtualList(params: VirtualListParams): VirtualList {
         return params.onKeyDown?.(event) ?? false;
     };
 
-    const cleanup = subscribeKeyDown(onKeyDown);
-    onCleanup(cleanup);
+    createEffect(() => {
+        if (params.focused?.() ?? true) {
+            const cleanup = subscribeKeyDown(onKeyDown);
+            onCleanup(cleanup);
+            return cleanup;
+        }
+    });
 
     return { list, listSizePixel, startPosition, focusedIndex: position };
 }

@@ -45,29 +45,27 @@ function SquareBanner(params: ChildBannerParams) {
     const [focusedIndex, setFocusedIndex] = createSignal<number>(1);
     createKeyNav({
         onKeyDown: (event) => {
-            if (!params.focused) {
-                return false;
-            }
-
-            if (getKey(event) === KEYS.RIGHT && stateMachine[focusedIndex()]['right']) {
-                setFocusedIndex(stateMachine[focusedIndex()]['right']);
+            const index = focusedIndex();
+            if (getKey(event) === KEYS.RIGHT && stateMachine[index]['right']) {
+                setFocusedIndex(stateMachine[index]['right']);
                 return true;
             }
-            if (getKey(event) === KEYS.LEFT && stateMachine[focusedIndex()]['left']) {
-                setFocusedIndex(stateMachine[focusedIndex()]['left']);
+            if (getKey(event) === KEYS.LEFT && stateMachine[index]['left']) {
+                setFocusedIndex(stateMachine[index]['left']);
                 return true;
             }
-            if (getKey(event) === KEYS.DOWN && stateMachine[focusedIndex()]['down']) {
-                setFocusedIndex(stateMachine[focusedIndex()]['down']);
+            if (getKey(event) === KEYS.DOWN && stateMachine[index]['down']) {
+                setFocusedIndex(stateMachine[index]['down']);
                 return true;
             }
-            if (getKey(event) === KEYS.UP && stateMachine[focusedIndex()]['up']) {
-                setFocusedIndex(stateMachine[focusedIndex()]['up']);
+            if (getKey(event) === KEYS.UP && stateMachine[index]['up']) {
+                setFocusedIndex(stateMachine[index]['up']);
                 return true;
             }
 
             return false;
-        }
+        },
+        focused: () => params.focused,
     });
 
     const itemSize = () => (params.width / 2) - 4; // 2px border
@@ -87,13 +85,14 @@ function MiniChildBanner(params: MiniChildBannerParams) {
     const [parentSize, setParentSize] = createSignal(0);
     const itemSize = () => parentSize() / 5;
     const { list, focusedIndex } = createVirtualList({
+        focused: () => params.focused,
         parentSize,
         sizeOfItem: () => itemSize(),
         overscan: 5,
         paddingStart: 50,
         paddingEnd: 50,
-        isNext: (event: KeyboardEvent) => params.focused && getKey(event) === KEYS.RIGHT,
-        isPrevious: (event: KeyboardEvent) => params.focused && getKey(event) === KEYS.LEFT,
+        isNext: (event: KeyboardEvent) => getKey(event) === KEYS.RIGHT,
+        isPrevious: (event: KeyboardEvent) => getKey(event) === KEYS.LEFT,
         startIndex: 2,
         circular: false,
         fixedFocus: false,
@@ -125,13 +124,14 @@ function ChildBanner(params: ChildBannerParams) {
     const [parentSize, setParentSize] = createSignal(0);
     const itemSize = () => parentSize() / 5;
     const { list, focusedIndex } = createVirtualList({
+        focused: () => params.focused,
         parentSize,
         sizeOfItem: () => itemSize(),
         overscan: 5,
         paddingStart: 50,
         paddingEnd: 50,
-        isNext: (event: KeyboardEvent) => params.focused && getKey(event) === KEYS.DOWN,
-        isPrevious: (event: KeyboardEvent) => params.focused && getKey(event) === KEYS.UP,
+        isNext: (event: KeyboardEvent) => getKey(event) === KEYS.DOWN,
+        isPrevious: (event: KeyboardEvent) => getKey(event) === KEYS.UP,
         startIndex: 2,
         circular: false,
         fixedFocus: false,
@@ -166,13 +166,14 @@ export default function Banner(params: BannerParams) {
     const [parentSize, setParentSize] = createSignal(0);
     const itemSize = () => parentSize() / 5;
     const { list, focusedIndex } = createVirtualList({
+        focused: () => params.focused,
         parentSize,
         sizeOfItem: () => itemSize(),
         overscan: 5,
         paddingStart: 50,
         paddingEnd: 50,
-        isNext: (event: KeyboardEvent) => params.focused && getKey(event) === KEYS.RIGHT,
-        isPrevious: (event: KeyboardEvent) => params.focused && getKey(event) === KEYS.LEFT,
+        isNext: (event: KeyboardEvent) => getKey(event) === KEYS.RIGHT,
+        isPrevious: (event: KeyboardEvent) => getKey(event) === KEYS.LEFT,
         startIndex: 0,
         circular: true,
         fixedFocus: false,
