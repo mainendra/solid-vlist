@@ -1,10 +1,8 @@
 import { Component, createSignal, For, onMount } from 'solid-js';
-import { lazy } from "solid-js";
+import Banner from './components/Banner';
+import Swimlane from './components/Swimlane';
 import { getKey, KEYS } from './libs/keyCodes';
 import { createVirtualList } from './libs/virtualList';
-
-const Banner = lazy(() => import('./components/Banner'));
-const Swimlane = lazy(() => import('./components/Swimlane'));
 
 const App: Component = () => {
     let parentRef: HTMLDivElement | undefined;
