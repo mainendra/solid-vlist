@@ -8,5 +8,8 @@ export default defineConfig({
       legacy({
           targets: ['Chrome > 45', 'not IE 11']
       })
-  ]
+  ],
+  build: {
+      target: 'es2015'
+  }
 });
