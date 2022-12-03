@@ -16,7 +16,7 @@ const App: Component = () => {
         isNext: (event: KeyboardEvent) => getKey(event) === KEYS.DOWN,
         isPrevious: (event: KeyboardEvent) => getKey(event) === KEYS.UP,
         startIndex: 0,
-        circular: false,
+        circular: true,
         fixedFocus: false,
         totalItems: 1000,
     });
