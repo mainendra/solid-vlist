@@ -1,8 +1,18 @@
-import { Component, createSignal, For, onMount } from 'solid-js';
+import { Component, createEffect, createSignal, For, onMount, Show } from 'solid-js';
 import Banner from './components/Banner';
 import Swimlane from './components/Swimlane';
 import { getKey, KEYS } from './libs/keyCodes';
 import { createVirtualList } from './libs/virtualList';
+import { keyCode, setKeyCode, setRedBg, setShowAll } from './store';
+
+const DELAY_MS = 2000;
+
+createEffect(() => {
+    if (keyCode() !== '') {
+        const timer = setTimeout(() => setKeyCode(''), DELAY_MS);
+        return () => clearTimeout(timer);
+    }
+});
 
 const App: Component = () => {
     let parentRef: HTMLDivElement | undefined;
@@ -15,6 +25,18 @@ const App: Component = () => {
         paddingEnd: 50,
         isNext: (event: KeyboardEvent) => getKey(event) === KEYS.DOWN,
         isPrevious: (event: KeyboardEvent) => getKey(event) === KEYS.UP,
+        onKeyDown: (event: KeyboardEvent) => {
+            if (getKey(event) === KEYS.M) {
+                setRedBg(redBg => !redBg);
+                return true;
+            } else if (getKey(event) === KEYS.A) {
+                setShowAll(showAll => !showAll);
+                return true;
+            } else {
+                setKeyCode(event.code);
+            }
+            return false;
+        },
         startIndex: 0,
         circular: true,
         fixedFocus: false,
@@ -25,6 +47,9 @@ const App: Component = () => {
 
     return (
         <div class="relative h-screen w-screen py-20 bg-white">
+            <Show when={keyCode() !== ''}>
+                <div class="absolute top-[100px] left-[100px] h-[100px] w-[200px] bg-white border-2 rounded flex justify-center items-center z-10">{keyCode()}</div>
+            </Show>
             <div ref={parentRef} class="h-full w-full overflow-hidden">
                 <div style={{ height: `${listSizePixel}px`, transform: `translate3d(0, ${-startPosition()}px, 0)` }} class="relative flex flex-col transition-all">
                     <For each={list()}>
