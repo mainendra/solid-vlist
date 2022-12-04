@@ -7,10 +7,13 @@ import { keyCode, setKeyCode, setRedBg, setShowAll } from './store';
 
 const DELAY_MS = 2000;
 
+let timer: number | undefined;
 createEffect(() => {
+    clearTimeout(timer);
     if (keyCode() !== '') {
-        const timer = setTimeout(() => setKeyCode(''), DELAY_MS);
-        return () => clearTimeout(timer);
+        timer = setTimeout(() => {
+            setKeyCode('')
+        }, DELAY_MS);
     }
 });
 
