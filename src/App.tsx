@@ -7,16 +7,6 @@ import { keyCode, setKeyCode, setRedBg, setShowAll } from './store';
 
 const DELAY_MS = 2000;
 
-let timer: number | undefined;
-createEffect(() => {
-    clearTimeout(timer);
-    if (keyCode() !== '') {
-        timer = setTimeout(() => {
-            setKeyCode('')
-        }, DELAY_MS);
-    }
-});
-
 const App: Component = () => {
     let parentRef: HTMLDivElement | undefined;
     const [parentSize, setParentSize] = createSignal(0);
@@ -44,6 +34,16 @@ const App: Component = () => {
         circular: true,
         fixedFocus: false,
         totalItems: 1000,
+    });
+
+    let timer: number | undefined;
+    createEffect(() => {
+        clearTimeout(timer);
+        if (keyCode() !== '') {
+            timer = setTimeout(() => {
+                setKeyCode('')
+            }, DELAY_MS);
+        }
     });
 
     onMount(() => setParentSize(parentRef?.offsetHeight ?? 0));
