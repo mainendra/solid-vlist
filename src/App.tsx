@@ -1,4 +1,4 @@
-import { Component, createEffect, createSignal, For, onMount, Show } from 'solid-js';
+import { Component, createEffect, createSignal, For, onCleanup, onMount, Show } from 'solid-js';
 import Banner from './components/Banner';
 import Swimlane from './components/Swimlane';
 import { getKey, KEYS } from './libs/keyCodes';
@@ -36,13 +36,15 @@ const App: Component = () => {
         totalItems: 1000,
     });
 
-    let timer: number | undefined;
     createEffect(() => {
-        clearTimeout(timer);
         if (keyCode() !== '') {
-            timer = setTimeout(() => {
+            const timer = setTimeout(() => {
                 setKeyCode('')
             }, DELAY_MS);
+            onCleanup(() => {
+                console.log('clear timer');
+                clearTimeout(timer);
+            });
         }
     });
 
