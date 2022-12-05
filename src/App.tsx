@@ -3,7 +3,7 @@ import Banner from './components/Banner';
 import Swimlane from './components/Swimlane';
 import { getKey, KEYS } from './libs/keyCodes';
 import { createVirtualList } from './libs/virtualList';
-import { keyCode, setKeyCode, setRedBg, setShowAll } from './store';
+import { setRedBg, setShowAll } from './store';
 
 const DELAY_MS = 2000;
 
@@ -36,13 +36,14 @@ const App: Component = () => {
         totalItems: 1000,
     });
 
+
+    const [keyCode, setKeyCode] = createSignal<string>('');
     createEffect(() => {
         if (keyCode() !== '') {
             const timer = setTimeout(() => {
                 setKeyCode('')
             }, DELAY_MS);
             onCleanup(() => {
-                console.log('clear timer');
                 clearTimeout(timer);
             });
         }
