@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [
       solidPlugin(),
       legacy({
-          targets: ['Safari >= 12', 'not IE 11']
+          targets: ['Chrome > 40', 'not IE 11']
       })
   ],
   build: {
