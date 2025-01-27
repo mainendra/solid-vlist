@@ -54,7 +54,7 @@ const App: Component = () => {
     return (
         <div class="relative h-screen w-screen py-20 bg-white">
             <Show when={keyCode() !== ''}>
-                <div class="absolute top-[100px] left-[100px] h-[100px] w-[200px] bg-white border-2 rounded flex justify-center items-center z-10">{keyCode()}</div>
+                <div class="absolute top-[100px] left-[100px] h-[100px] w-[200px] bg-white border-2 rounded-sm flex justify-center items-center z-10">{keyCode()}</div>
             </Show>
             <div ref={parentRef} class="h-full w-full overflow-hidden">
                 <div style={{ height: `${listSizePixel}px`, transform: `translate3d(0, ${-startPosition()}px, 0)` }} class="relative flex flex-col transition-all">

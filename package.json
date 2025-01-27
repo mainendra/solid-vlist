@@ -10,15 +10,14 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@vitejs/plugin-legacy": "^2.3.1",
-    "autoprefixer": "^10.4.19",
-    "postcss": "^8.4.39",
-    "tailwindcss": "^3.4.6",
-    "typescript": "^4.9.5",
-    "vite": "^3.2.10",
-    "vite-plugin-solid": "^2.10.2"
+    "@tailwindcss/vite": "^4.0.0",
+    "@vitejs/plugin-legacy": "^6.0.0",
+    "tailwindcss": "^4.0.0",
+    "typescript": "^5.7.3",
+    "vite": "^6.0.11",
+    "vite-plugin-solid": "^2.11.0"
   },
   "dependencies": {
-    "solid-js": "^1.8.18"
+    "solid-js": "^1.9.4"
   }
 }

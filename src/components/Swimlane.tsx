@@ -37,7 +37,7 @@ export default function Swimlane(params: SwimlaneParams) {
                     {
                         (item) =>
                         <div class="w-[150px] h-[150px] flex justify-center items-center transition-all absolute" classList={{'scale-125': item.index === getFocusedIndex()}} style={{ left: `${item.start}px` }}>
-                            <span class="absolute rounded p-2" classList={{'invisible': (item.index !== getFocusedIndex() && showAll() === false), 'bg-white': redBg() === false, 'bg-red-300': redBg() === true}}>{params.index + 1} / {item.index + 1}</span>
+                            <span class="absolute rounded-sm p-2" classList={{'invisible': (item.index !== getFocusedIndex() && showAll() === false), 'bg-white': redBg() === false, 'bg-red-300': redBg() === true}}>{params.index + 1} / {item.index + 1}</span>
                             <img src={`https://picsum.photos/seed/${params.index}${item.index}/100`} alt={`r${item.start}c${item.index}`} class="w-[100px] h-[100px] bg-gray-500"  classList={{'border-solid border-2 border-red-500': item.index === getFocusedIndex()}} />
                         </div>
                     }
