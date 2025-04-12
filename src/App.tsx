@@ -7,6 +7,7 @@ import { setRedBg, setShowAll } from './store';
 
 const DELAY_MS = 2000;
 
+// main component
 const App: Component = () => {
     let parentRef: HTMLDivElement | undefined;
     const [parentSize, setParentSize] = createSignal(0);
