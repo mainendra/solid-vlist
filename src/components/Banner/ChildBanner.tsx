@@ -1,4 +1,4 @@
-import { createSignal, For, onMount } from "solid-js";
+import { createSignal, For, onSettled } from "solid-js";
 import { getKey, KEYS } from "../../libs/keyCodes";
 import { createVirtualList } from "../../libs/virtualList";
 import MiniChildBanner from "./MiniBanner";
@@ -30,7 +30,7 @@ export default function ChildBanner(params: ChildBannerParams) {
 
     const getFocusedIndex = () => params.focused ? focusedIndex() : -1;
 
-    onMount(() => setParentSize(parentRef?.offsetHeight ?? 0));
+    onSettled(() => { setParentSize(parentRef?.offsetHeight ?? 0); });
 
     return (
         <div ref={parentRef} class="overflow-hidden h-full" style={{width: `${params.width}px`}}>
@@ -42,7 +42,7 @@ export default function ChildBanner(params: ChildBannerParams) {
                             <MiniChildBanner index={item.index} focused={params.focused && item.index === focusedIndex()} height={itemSize()} />
                         </div> :
                         <div class="flex justify-center items-center" style={{height: `${itemSize()}px`, width: `${params.width}px`}}>
-                            <span class="text-4xl transition-all" classList={{'text-red-500 font-bold scale-125': item.index === getFocusedIndex()}}>{item.index}</span>
+                            <span class={["text-4xl transition-all", {'text-red-500 font-bold scale-125': item.index === getFocusedIndex()}]}>{item.index}</span>
                         </div>
                     }
                 </For>

@@ -1,4 +1,4 @@
-import { Accessor, createEffect, createSignal, onCleanup } from "solid-js";
+import { Accessor, createEffect, createSignal } from "solid-js";
 import { subscribeKeyDown } from "./keyListener";
 
 export interface navProps {
@@ -60,11 +60,12 @@ interface KeyNavParams {
     focused?: Accessor<boolean>;
 }
 export function createKeyNav(params: KeyNavParams) {
-    createEffect(() => {
-        if (params.focused?.() ?? true) {
-            const cleanup = subscribeKeyDown(params.onKeyDown);
-            onCleanup(cleanup);
-            return cleanup;
+    createEffect(
+        () => params.focused?.() ?? true,
+        (focused) => {
+            if (focused) {
+                return subscribeKeyDown(params.onKeyDown);
+            }
         }
-    });
+    );
 }

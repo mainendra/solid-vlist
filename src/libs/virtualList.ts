@@ -1,4 +1,4 @@
-import { Accessor, createEffect, createMemo, onCleanup } from "solid-js";
+import { Accessor, createEffect, createMemo } from "solid-js";
 import { subscribeKeyDown } from "./keyListener";
 import { createNav } from "./navigation";
 
@@ -27,7 +27,7 @@ interface ListItem {
 
 interface VirtualList {
     list: Accessor<ListItem[]>,
-    listSizePixel: number,
+    listSizePixel: Accessor<number>,
     startPosition: Accessor<number>,
     focusedIndex: Accessor<number>,
 }
@@ -70,11 +70,16 @@ function getSlicedList({ overscan = 0, itemList, startPos, endPos }: GetSlicedLi
 // Use in component
 export function createVirtualList(params: VirtualListParams): VirtualList {
     const { isNext, isPrevious, totalItems, startIndex = 0, circular = false, fixedFocus = false, paddingStart = 0, paddingEnd = 0, parentSize } = params;
-    const { listSizePixel, itemList } = getItemList(params);
+    // Reactive: `sizeOfItem` may read `parentSize` (e.g. Banner uses parentSize/5),
+    // so the item list must recompute whenever those sources change.
+    const itemListMemo = createMemo(() => getItemList(params));
+    const itemList = () => itemListMemo().itemList;
+    const listSizePixel = () => itemListMemo().listSizePixel;
     const { position, next, previous } = createNav({ start: 0, end: totalItems - 1, current: startIndex, circular: circular });
 
-    const startPosition = createMemo((prevStart: number) => {
-        const item = itemList[position()];
+    const startPosition = createMemo((prevStart: number | undefined) => {
+        prevStart = prevStart ?? -paddingStart;
+        const item = itemList()[position()];
         const parentSizeValue = parentSize();
 
         if (item.index === 0) { // no padding for first item
@@ -99,8 +104,8 @@ export function createVirtualList(params: VirtualListParams): VirtualList {
         }
 
         return result;
-    }, -paddingStart);
-    const list = () => getSlicedList({ ...params, startPos: startPosition(), endPos: (startPosition() + parentSize()), itemList });
+    });
+    const list = () => getSlicedList({ ...params, startPos: startPosition(), endPos: (startPosition() + parentSize()), itemList: itemList() });
 
     const onKeyDown = (event: KeyboardEvent) => {
         if (isNext?.(event)) {
@@ -117,13 +122,14 @@ export function createVirtualList(params: VirtualListParams): VirtualList {
         return params.onKeyDown?.(event) ?? false;
     };
 
-    createEffect(() => {
-        if (params.focused?.() ?? true) {
-            const cleanup = subscribeKeyDown(onKeyDown);
-            onCleanup(cleanup);
-            return cleanup;
+    createEffect(
+        () => params.focused?.() ?? true,
+        (focused) => {
+            if (focused) {
+                return subscribeKeyDown(onKeyDown);
+            }
         }
-    });
+    );
 
     return { list, listSizePixel, startPosition, focusedIndex: position };
 }

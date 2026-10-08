@@ -1,4 +1,4 @@
-import { Component, createEffect, createSignal, For, onCleanup, onMount, Show } from 'solid-js';
+import { Component, createEffect, createSignal, For, onSettled, Show } from 'solid-js';
 import Banner from './components/Banner';
 import Swimlane from './components/Swimlane';
 import { getKey, KEYS } from './libs/keyCodes';
@@ -39,18 +39,19 @@ const App: Component = () => {
 
 
     const [keyCode, setKeyCode] = createSignal<string>('');
-    createEffect(() => {
-        if (keyCode() !== '') {
-            const timer = setTimeout(() => {
-                setKeyCode('')
-            }, DELAY_MS);
-            onCleanup(() => {
-                clearTimeout(timer);
-            });
+    createEffect(
+        () => keyCode(),
+        (code) => {
+            if (code !== '') {
+                const timer = setTimeout(() => {
+                    setKeyCode('');
+                }, DELAY_MS);
+                return () => clearTimeout(timer);
+            }
         }
-    });
+    );
 
-    onMount(() => setParentSize(parentRef?.offsetHeight ?? 0));
+    onSettled(() => { setParentSize(parentRef?.offsetHeight ?? 0); });
 
     return (
         <div class="relative h-screen w-screen py-20 bg-white">
@@ -58,7 +59,7 @@ const App: Component = () => {
                 <div class="absolute top-[100px] left-[100px] h-[100px] w-[200px] bg-white border-2 rounded-sm flex justify-center items-center z-10">{keyCode()}</div>
             </Show>
             <div ref={parentRef} class="h-full w-full overflow-hidden">
-                <div style={{ height: `${listSizePixel}px`, transform: `translate3d(0, ${-startPosition()}px, 0)` }} class="relative flex flex-col transition-all">
+                <div style={{ height: `${listSizePixel()}px`, transform: `translate3d(0, ${-startPosition()}px, 0)` }} class="relative flex flex-col transition-all">
                     <For each={list()}>
                         {
                             (item) => (item.index % 5 === 0) ?
