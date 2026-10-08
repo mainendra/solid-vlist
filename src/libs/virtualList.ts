@@ -1,6 +1,5 @@
-import { Accessor, createEffect, createMemo } from "solid-js";
-import { subscribeKeyDown } from "./keyListener";
-import { createNav } from "./navigation";
+import { Accessor, createMemo } from "solid-js";
+import { createKeyNav, createNav } from "./navigation";
 
 interface VirtualListParams {
     parentSize: Accessor<number>;
@@ -61,9 +60,31 @@ function getItemList({totalItems, sizeOfItem}: GetListParam) {
     return { listSizePixel: totalSize, itemList: list };
 }
 
+// Returns the index of the first item in `list` for which `predicate` is true.
+// Assumes the predicate partitions the sorted list into [false..., true...].
+// Returns `list.length` if no item satisfies it.
+function lowerBound(list: ListItem[], predicate: (item: ListItem) => boolean): number {
+    let lo = 0;
+    let hi = list.length;
+    while (lo < hi) {
+        const mid = (lo + hi) >>> 1;
+        if (predicate(list[mid])) {
+            hi = mid;
+        } else {
+            lo = mid + 1;
+        }
+    }
+    return lo;
+}
+
 function getSlicedList({ overscan = 0, itemList, startPos, endPos }: GetSlicedListParam): ListItem[] {
-    const startIndex = itemList.find(item => item.start > startPos)?.index ?? 0;
-    const endIndex = itemList.find(item => item.end >= endPos)?.index ?? itemList.length - 1;
+    // itemList is sorted ascending by both `start` and `end`, so each boundary
+    // is a lower-bound binary search rather than a linear scan. Fallbacks match
+    // the original Array.find()?.index ?? ... behavior.
+    const startFound = lowerBound(itemList, item => item.start > startPos);
+    const startIndex = startFound < itemList.length ? startFound : 0;
+    const endFound = lowerBound(itemList, item => item.end >= endPos);
+    const endIndex = endFound < itemList.length ? endFound : itemList.length - 1;
     return itemList.slice(Math.max(0, (startIndex - overscan)), Math.min(itemList.length, endIndex + overscan));
 }
 
@@ -80,6 +101,7 @@ export function createVirtualList(params: VirtualListParams): VirtualList {
     const startPosition = createMemo((prevStart: number | undefined) => {
         prevStart = prevStart ?? -paddingStart;
         const item = itemList()[position()];
+        if (!item) return prevStart;
         const parentSizeValue = parentSize();
 
         if (item.index === 0) { // no padding for first item
@@ -122,14 +144,7 @@ export function createVirtualList(params: VirtualListParams): VirtualList {
         return params.onKeyDown?.(event) ?? false;
     };
 
-    createEffect(
-        () => params.focused?.() ?? true,
-        (focused) => {
-            if (focused) {
-                return subscribeKeyDown(onKeyDown);
-            }
-        }
-    );
+    createKeyNav({ onKeyDown, focused: params.focused });
 
     return { list, listSizePixel, startPosition, focusedIndex: position };
 }

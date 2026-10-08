@@ -1,10 +1,6 @@
 let handlers: ({callback: (event: KeyboardEvent) => boolean|void})[] = [];
 let keyListenerEnabled = false;
 
-export function getListenersCount() {
-    return handlers.length;
-}
-
 function addKeyListener() {
     window.addEventListener('keydown', onKeyDown);
     window.addEventListener('nativeUiBridge', onNativeEvent)

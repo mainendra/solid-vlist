@@ -1,22 +1,22 @@
 import { Accessor, createEffect, createSignal } from "solid-js";
 import { subscribeKeyDown } from "./keyListener";
 
-export interface navProps {
+export interface NavProps {
     start: number,
     end: number,
     current: number,
     circular: boolean,
 }
 
-export interface returnType {
+export interface NavControls {
     position: Accessor<number>,
     next: () => boolean,
     previous: () => boolean,
     goTo: (pos: number) => void
 }
 
-export function createNav({ start, end, current, circular }: navProps): returnType {
-    const [position, setPosition] = createSignal(current === undefined ? start : current);
+export function createNav({ start, end, current, circular }: NavProps): NavControls {
+    const [position, setPosition] = createSignal(current);
 
     const next = () => {
         if (position() + 1 <= end) {
