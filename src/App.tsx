@@ -11,7 +11,7 @@ const DELAY_MS = 2000;
 const App: Component = () => {
     let parentRef: HTMLDivElement | undefined;
     const [parentSize, setParentSize] = createSignal(0);
-    const { list, listSizePixel, startPosition, focusedIndex } = createVirtualList({
+    const { list, listSizePixel, startPosition, isFocused } = createVirtualList({
         parentSize,
         sizeOfItem: (index) => index % 5 === 0 ? 300 : 150,
         overscan: 5,
@@ -63,8 +63,8 @@ const App: Component = () => {
                     <For each={list()}>
                         {
                             (item) => (item.index % 5 === 0) ?
-                                <div style={{ top: `${item.start}px` }} class="absolute w-screen"><Banner index={item.index} focused={item.index === focusedIndex()} /></div> :
-                                <div style={{ top: `${item.start}px` }} class="absolute w-screen"><Swimlane index={item.index} focused={focusedIndex() === item.index} /></div>
+                                <div style={{ top: `${item.start}px` }} class="absolute w-screen"><Banner index={item.index} focused={isFocused(item.index)} /></div> :
+                                <div style={{ top: `${item.start}px` }} class="absolute w-screen"><Swimlane index={item.index} focused={isFocused(item.index)} /></div>
                         }
                     </For>
                 </div>

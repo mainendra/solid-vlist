@@ -1,4 +1,4 @@
-import { Accessor, createMemo } from "solid-js";
+import { Accessor, createMemo, createProjection } from "solid-js";
 import { createKeyNav, createNav } from "./navigation";
 
 interface VirtualListParams {
@@ -29,6 +29,7 @@ interface VirtualList {
     listSizePixel: Accessor<number>,
     startPosition: Accessor<number>,
     focusedIndex: Accessor<number>,
+    isFocused: (index: number) => boolean,
 }
 
 interface GetSlicedListParam {
@@ -146,5 +147,17 @@ export function createVirtualList(params: VirtualListParams): VirtualList {
 
     createKeyNav({ onKeyDown, focused: params.focused });
 
-    return { list, listSizePixel, startPosition, focusedIndex: position };
+    // Keyed selection: a store map holding only the focused index, derived from
+    // `position()`. Each row reads its own key via `isFocused(index)`, so a move
+    // notifies only the two rows whose focused-state flips — not every rendered
+    // row (avoids the HUGE_FAN_OUT on one shared `position` signal).
+    const focusedMap = createProjection<Record<number, boolean>>((draft) => {
+        for (const key in draft) {
+            delete draft[key];
+        }
+        draft[position()] = true;
+    }, {});
+    const isFocused = (index: number) => Boolean(focusedMap[index]);
+
+    return { list, listSizePixel, startPosition, focusedIndex: position, isFocused };
 }

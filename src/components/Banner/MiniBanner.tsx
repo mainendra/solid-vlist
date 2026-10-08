@@ -12,7 +12,7 @@ export default function MiniChildBanner(params: MiniChildBannerParams) {
     let parentRef: HTMLDivElement | undefined;
     const [parentSize, setParentSize] = createSignal(0);
     const itemSize = () => parentSize() / 5;
-    const { list, focusedIndex } = createVirtualList({
+    const { list, isFocused } = createVirtualList({
         focused: () => params.focused,
         parentSize,
         sizeOfItem: () => itemSize(),
@@ -27,7 +27,7 @@ export default function MiniChildBanner(params: MiniChildBannerParams) {
         totalItems: 5,
     });
 
-    const getFocusedIndex = () => params.focused ? focusedIndex() : -1;
+    const getIsFocused = (index: number) => params.focused && isFocused(index);
 
     onSettled(() => { setParentSize(parentRef?.offsetHeight ?? 0); });
 
@@ -38,7 +38,7 @@ export default function MiniChildBanner(params: MiniChildBannerParams) {
                     {
                         (item) =>
                         <div class="flex justify-center items-center" style={{width: `${params.height}px`, height: `${params.height}px`}}>
-                            <span class={["text-2xl transition-all", {'text-red-500 font-bold scale-125': item.index === getFocusedIndex()}]}>{item.index}</span>
+                            <span class={["text-2xl transition-all", {'text-red-500 font-bold scale-125': getIsFocused(item.index)}]}>{item.index}</span>
                         </div>
                     }
                 </For>

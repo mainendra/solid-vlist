@@ -11,7 +11,7 @@ interface SwimlaneParams {
 export default function Swimlane(params: SwimlaneParams) {
     let parentRef: HTMLDivElement | undefined;
     const [parentSize, setParentSize] = createSignal(0);
-    const { list, listSizePixel, startPosition, focusedIndex } = createVirtualList({
+    const { list, listSizePixel, startPosition, isFocused } = createVirtualList({
         focused: () => params.focused,
         parentSize,
         sizeOfItem: () => 150,
@@ -26,7 +26,7 @@ export default function Swimlane(params: SwimlaneParams) {
         totalItems: 1000,
     });
 
-    const getFocusedIndex = () => params.focused ? focusedIndex() : -1;
+    const getIsFocused = (index: number) => params.focused && isFocused(index);
 
     onSettled(() => { setParentSize(parentRef?.offsetWidth ?? 0); });
 
@@ -36,9 +36,9 @@ export default function Swimlane(params: SwimlaneParams) {
                 <For each={list()}>
                     {
                         (item) =>
-                        <div class={["w-[150px] h-[150px] flex justify-center items-center transition-all absolute", {'scale-125': item.index === getFocusedIndex()}]} style={{ left: `${item.start}px` }}>
-                            <span class={["absolute rounded-sm p-2", {'invisible': (item.index !== getFocusedIndex() && showAll() === false), 'bg-white': redBg() === false, 'bg-red-300': redBg() === true}]}>{params.index + 1} / {item.index + 1}</span>
-                            <img src={`https://picsum.photos/seed/${params.index}${item.index}/100`} alt={`r${item.start}c${item.index}`} class={["w-[100px] h-[100px] bg-gray-500", {'border-solid border-2 border-red-500': item.index === getFocusedIndex()}]} />
+                        <div class={["w-[150px] h-[150px] flex justify-center items-center transition-all absolute", {'scale-125': getIsFocused(item.index)}]} style={{ left: `${item.start}px` }}>
+                            <span class={["absolute rounded-sm p-2", {'invisible': (!getIsFocused(item.index) && showAll() === false), 'bg-white': redBg() === false, 'bg-red-300': redBg() === true}]}>{params.index + 1} / {item.index + 1}</span>
+                            <img src={`https://picsum.photos/seed/${params.index}${item.index}/100`} alt={`r${item.start}c${item.index}`} class={["w-[100px] h-[100px] bg-gray-500", {'border-solid border-2 border-red-500': getIsFocused(item.index)}]} />
                         </div>
                     }
                 </For>

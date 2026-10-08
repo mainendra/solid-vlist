@@ -13,7 +13,7 @@ export default function Banner(params: BannerParams) {
     let parentRef: HTMLDivElement | undefined;
     const [parentSize, setParentSize] = createSignal(0);
     const itemSize = () => parentSize() / 5;
-    const { list, focusedIndex } = createVirtualList({
+    const { list, isFocused } = createVirtualList({
         focused: () => params.focused,
         parentSize,
         sizeOfItem: () => itemSize(),
@@ -28,7 +28,7 @@ export default function Banner(params: BannerParams) {
         totalItems: 5,
     });
 
-    const getFocusedIndex = () => params.focused ? focusedIndex() : -1;
+    const getIsFocused = (index: number) => params.focused && isFocused(index);
 
     onSettled(() => { setParentSize(parentRef?.offsetWidth ?? 0); });
 
@@ -40,14 +40,14 @@ export default function Banner(params: BannerParams) {
                         (item) =>
                             item.index === 3 ?
                             <div class="h-[300px] flex justify-center items-center" style={{width: `${itemSize()}px`}}>
-                                <ChildBanner index={item.index} focused={params.focused && item.index === focusedIndex()} width={itemSize()} />
+                                <ChildBanner index={item.index} focused={getIsFocused(item.index)} width={itemSize()} />
                             </div> :
                             item.index === 1 ?
                             <div class="h-[300px] flex justify-center items-center" style={{width: `${itemSize()}px`}}>
-                                <SquareBanner index={item.index} focused={params.focused && item.index === focusedIndex()} width={itemSize()} />
+                                <SquareBanner index={item.index} focused={getIsFocused(item.index)} width={itemSize()} />
                             </div> :
                             <div class="h-[300px] flex justify-center items-center" style={{width: `${itemSize()}px`}}>
-                                <span class={["text-4xl transition-all", {'text-red-500 font-bold scale-125': item.index === getFocusedIndex()}]}>{item.index}</span>
+                                <span class={["text-4xl transition-all", {'text-red-500 font-bold scale-125': getIsFocused(item.index)}]}>{item.index}</span>
                             </div>
                     }
                 </For>
