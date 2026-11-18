@@ -32,7 +32,10 @@ export function subscribeKeyDown(callback: (event: KeyboardEvent) => boolean|voi
     handlers.push(handlerObject);
 
     return () => {
-        handlers.splice(handlers.indexOf(handlerObject), 1);
+        const index = handlers.indexOf(handlerObject);
+        if (index >= 0) {
+            handlers.splice(index, 1);
+        }
     };
 }
 
