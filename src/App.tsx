@@ -11,6 +11,7 @@ const DELAY_MS = 2000;
 const App: Component = () => {
     let parentRef: HTMLDivElement | undefined;
     const [parentSize, setParentSize] = createSignal(0);
+    const [keyCode, setKeyCode] = createSignal<string>('');
     const { list, listSizePixel, startPosition, isFocused } = createVirtualList({
         parentSize,
         sizeOfItem: (index) => index % 5 === 0 ? 300 : 150,
@@ -37,8 +38,6 @@ const App: Component = () => {
         totalItems: 1000,
     });
 
-
-    const [keyCode, setKeyCode] = createSignal<string>('');
     createEffect(
         () => keyCode(),
         (code) => {

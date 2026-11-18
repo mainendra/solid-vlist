@@ -128,7 +128,10 @@ export function createVirtualList(params: VirtualListParams): VirtualList {
 
         return result;
     });
-    const list = () => getSlicedList({ ...params, startPos: startPosition(), endPos: (startPosition() + parentSize()), itemList: itemList() });
+    const list = createMemo(() => {
+        const startPos = startPosition();
+        return getSlicedList({ ...params, startPos, endPos: startPos + parentSize(), itemList: itemList() });
+    });
 
     const onKeyDown = (event: KeyboardEvent) => {
         if (isNext?.(event)) {
